@@ -38,17 +38,6 @@ def main():
         os.environ["STREAMLIT_SERVER_ENABLE_CORS"] = "false"
         os.environ["STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION"] = "false"
 
-        # Force production mode via config API (env vars alone may fail
-        # because PyInstaller extracts streamlit outside of site-packages,
-        # making the default detection think this is a dev checkout).
-        from streamlit import config
-        config.set_option("global.developmentMode", False)
-        config.set_option("server.headless", True)
-        config.set_option("server.fileWatcherType", "none")
-        config.set_option("browser.gatherUsageStats", False)
-        config.set_option("server.enableCORS", False)
-        config.set_option("server.enableXsrfProtection", False)
-
         def _open_browser():
             time.sleep(3)
             webbrowser.open("http://localhost:8501")
@@ -62,7 +51,10 @@ def main():
             "server.headless": True,
             "server.fileWatcherType": "none",
             "browser.gatherUsageStats": False,
+            "server.enableCORS": False,
+            "server.enableXsrfProtection": False,
         }
+        bootstrap.load_config_options(flag_options)
         bootstrap.run(app_path, False, [], flag_options=flag_options)
     else:
         # ── Dev mode: launch via subprocess normally ──
@@ -74,6 +66,8 @@ def main():
             "--server.fileWatcherType=none",
             "--browser.gatherUsageStats=false",
             "--global.developmentMode=false",
+            "--server.enableCORS=false",
+            "--server.enableXsrfProtection=false",
         ]
         try:
             process = subprocess.run(args)

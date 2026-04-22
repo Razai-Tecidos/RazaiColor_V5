@@ -926,12 +926,12 @@ if st.session_state.stage == 1:
     with col2:
         st.markdown("### Preview")
         if uploaded_file is not None:
-            st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
+            st.image(uploaded_file, caption=uploaded_file.name, width="stretch")
         elif st.session_state.uploaded_image_bytes:
             st.image(
                 st.session_state.uploaded_image_bytes,
                 caption=st.session_state.uploaded_image_name,
-                use_container_width=True,
+                width="stretch",
             )
         else:
             st.markdown(
@@ -999,7 +999,7 @@ if st.session_state.stage == 2:
         with header_col:
             st.markdown('<p class="field-caption">AJUSTES FINOS</p>', unsafe_allow_html=True)
         with reset_col:
-            if st.button("Reset", use_container_width=True, help="Voltar aos valores padrão"):
+            if st.button("Reset", width="stretch", help="Voltar aos valores padrão"):
                 reset_slider_defaults()
                 st.rerun()
 
@@ -1029,7 +1029,7 @@ if st.session_state.stage == 2:
         )
 
         st.markdown('<div style="margin-top: 2rem;"></div>', unsafe_allow_html=True)
-        if st.button("Adicionar à Coleção", type="primary", use_container_width=True, on_click=submit_current_selection_to_collection):
+        if st.button("Adicionar à Coleção", type="primary", width="stretch", on_click=submit_current_selection_to_collection):
             pass
 
     with preview_col:
@@ -1056,7 +1056,7 @@ if st.session_state.stage == 2:
             st.image(
                 live_preview_image,
                 caption=f"{color_name} ({normalized_hex})" if normalized_hex else "Pré-visualização",
-                use_container_width=True,
+                width="stretch",
             )
 
             # ── Download individual da imagem atual (resolução total) ──
@@ -1073,7 +1073,8 @@ if st.session_state.stage == 2:
                         data=full_res_bytes,
                         file_name=download_label,
                         mime="image/png",
-                        use_container_width=True,
+                        on_click="ignore",
+                        width="stretch",
                         key="download_single_image",
                     )
         else:
@@ -1114,7 +1115,7 @@ if st.session_state.stage == 2:
             st.caption(f"{len(st.session_state.collection)} cores armazenadas na coleção.")
     with collection_toggle_col:
         toggle_label = "Ocultar Coleção" if st.session_state.collection_panel_expanded else "Mostrar Coleção"
-        if st.button(toggle_label, key="toggle_collection_panel", use_container_width=True, disabled=not st.session_state.collection):
+        if st.button(toggle_label, key="toggle_collection_panel", width="stretch", disabled=not st.session_state.collection):
             st.session_state.collection_panel_expanded = not st.session_state.collection_panel_expanded
             st.rerun()
 
@@ -1138,7 +1139,7 @@ if st.session_state.stage == 2:
         with pager_col:
             prev_col, page_info_col, next_col = st.columns([1, 1.4, 1], gap="small")
             with prev_col:
-                if st.button("Anterior", key="collection_page_prev", use_container_width=True, disabled=page <= 1):
+                if st.button("Anterior", key="collection_page_prev", width="stretch", disabled=page <= 1):
                     st.session_state.collection_page = max(1, page - 1)
                     st.rerun()
             with page_info_col:
@@ -1147,7 +1148,7 @@ if st.session_state.stage == 2:
                     unsafe_allow_html=True,
                 )
             with next_col:
-                if st.button("Próxima", key="collection_page_next", use_container_width=True, disabled=page >= total_pages):
+                if st.button("Próxima", key="collection_page_next", width="stretch", disabled=page >= total_pages):
                     st.session_state.collection_page = min(total_pages, page + 1)
                     st.rerun()
 
@@ -1167,11 +1168,11 @@ if st.session_state.stage == 2:
                     display_image_ref = build_collection_thumbnail_bytes(item["processed_image_bytes"])
                     item["display_image_bytes"] = display_image_ref
                 with row_columns[offset]:
-                    st.image(display_image_ref, use_container_width=True)
+                    st.image(display_image_ref, width="stretch")
                     st.markdown(f"**{item['name']}**")
                     st.markdown(item["hex"])
                     st.caption(image_size_label)
-                    if st.button("Excluir", key=f"delete_collection_item_{item_index}", use_container_width=True):
+                    if st.button("Excluir", key=f"delete_collection_item_{item_index}", width="stretch"):
                         remove_collection_item(item_index)
                         st.rerun()
     else:
@@ -1198,15 +1199,15 @@ if st.session_state.stage == 2:
     with compression_action_col:
         if st.session_state.collection:
             if collection_requires_compression:
-                if st.button("Comprimir Colecao para Download", use_container_width=True):
+                if st.button("Comprimir Colecao para Download", width="stretch"):
                     compressed_count, items_to_compress, total_items = compress_collection_for_download()
                     st.success(
                         f"Compressao concluida: {compressed_count}/{items_to_compress} imagens processadas. Colecao total: {total_items}."
                     )
             else:
-                st.button("Colecao Ja Pronta para Download", disabled=True, use_container_width=True)
+                st.button("Colecao Ja Pronta para Download", disabled=True, width="stretch")
         else:
-            st.button("Comprimir Colecao para Download", disabled=True, use_container_width=True)
+            st.button("Comprimir Colecao para Download", disabled=True, width="stretch")
 
     st.markdown('<div style="margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--color-border);"></div>', unsafe_allow_html=True)
     download_info_col, download_action_col = st.columns([2.5, 1.1], gap="large")
@@ -1216,7 +1217,7 @@ if st.session_state.stage == 2:
     with download_action_col:
         if st.session_state.collection and st.session_state.collection_ready_for_download:
             if st.session_state.collection_zip_bytes is None:
-                if st.button("Preparar ZIP para Download", type="primary", use_container_width=True, key="prepare_collection_zip_button"):
+                if st.button("Preparar ZIP para Download", type="primary", width="stretch", key="prepare_collection_zip_button"):
                     with st.spinner("Gerando ZIP da colecao..."):
                         get_collection_zip_bytes()
                     st.rerun()
@@ -1227,9 +1228,10 @@ if st.session_state.stage == 2:
                     file_name="razaicolor_collection.zip",
                     mime="application/zip",
                     type="primary",
-                    use_container_width=True,
+                    on_click="ignore",
+                    width="stretch",
                     key="download_collection_zip_button",
                 )
                 st.caption(f"ZIP pronto: {bytes_to_mb_label(st.session_state.collection_zip_bytes)}")
         else:
-            st.button("Baixar Coleção (.zip) Indisponível", disabled=True, use_container_width=True)
+            st.button("Baixar Coleção (.zip) Indisponível", disabled=True, width="stretch")
